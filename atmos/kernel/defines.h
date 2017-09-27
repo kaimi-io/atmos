@@ -26,3 +26,12 @@
 
 ///Non-null function parameters.
 #define ATMOS_NONNULL(...) __attribute__((nonnull(__VA_ARGS__)))
+
+//Call and jump assembler device-specific instructions.
+#ifdef __AVR_HAVE_JMP_CALL__
+#	define ATMOS_CALL "call "
+#	define ATMOS_JUMP "jmp "
+#else //__AVR_HAVE_JMP_CALL__
+#	define ATMOS_CALL "rcall "
+#	define ATMOS_JUMP "rjmp "
+#endif //__AVR_HAVE_JMP_CALL__

@@ -50,13 +50,13 @@ struct ATMOS_PACKED forward_list_base
 	forward_list_element* first();
 };
 
-void forward_list_base::push_front(forward_list_element* elem)
+inline void forward_list_base::push_front(forward_list_element* elem)
 {
 	elem->next = first_element;
 	first_element = elem;
 }
 
-forward_list_element* forward_list_base::pop_front()
+inline forward_list_element* forward_list_base::pop_front()
 {
 	auto* result = first_element;
 	if(result)
@@ -64,7 +64,7 @@ forward_list_element* forward_list_base::pop_front()
 	return result;
 }
 
-bool forward_list_base::remove(forward_list_element* elem)
+inline bool forward_list_base::remove(forward_list_element* elem)
 {
 	auto* current = first_element;
 	forward_list_element* prev = nullptr;
@@ -86,7 +86,8 @@ bool forward_list_base::remove(forward_list_element* elem)
 	return true;
 }
 
-void forward_list_base::insert_before(forward_list_element* prev, forward_list_element* current, forward_list_element* elem)
+inline void forward_list_base::insert_before(forward_list_element* prev,
+	forward_list_element* current, forward_list_element* elem)
 {
 	elem->next = current;
 		
@@ -96,12 +97,12 @@ void forward_list_base::insert_before(forward_list_element* prev, forward_list_e
 		first_element = elem;
 }
 
-bool forward_list_base::empty() const
+inline bool forward_list_base::empty() const
 {
 	return !first_element;
 }
 
-forward_list_element* forward_list_base::first()
+inline forward_list_element* forward_list_base::first()
 {
 	return first_element;
 }
