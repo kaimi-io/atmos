@@ -38,10 +38,15 @@ atmos::process::stack_pointer_type ATMOS_HOT ATMOS_USED choose_next_process()
 	asm("choose_next_process");
 atmos::process::stack_pointer_type choose_next_process()
 {
-	process_list_element_tagged* current = process_list::next(current_process);
+	process_list_element_tagged* current = current_process;
+	auto* first = running_processes.first();
+	if(!current)
+		current = first;
+	
+	current = process_list::next(current);
 	//If we do not have next process to run, just take the first one available.
 	if(!current)
-		current = running_processes.first();
+		current = first;
 
 	//Save current process pointer.
 	current_process = current;
