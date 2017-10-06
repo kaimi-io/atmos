@@ -32,35 +32,21 @@ struct tick_counter_checker
 	static constexpr bool is_valid = false;
 };
 
-template<>
-struct tick_counter_checker<uint8_t>
+struct valid_type
 {
 	static constexpr bool is_valid = true;
 };
 
 template<>
-struct tick_counter_checker<uint16_t>
-{
-	static constexpr bool is_valid = true;
-};
-
+struct tick_counter_checker<uint8_t> : valid_type {};
 template<>
-struct tick_counter_checker<__uint24>
-{
-	static constexpr bool is_valid = true;
-};
-
+struct tick_counter_checker<uint16_t> : valid_type {};
 template<>
-struct tick_counter_checker<uint32_t>
-{
-	static constexpr bool is_valid = true;
-};
-
+struct tick_counter_checker<__uint24> : valid_type {};
 template<>
-struct tick_counter_checker<uint64_t>
-{
-	static constexpr bool is_valid = true;
-};
+struct tick_counter_checker<uint32_t> : valid_type {};
+template<>
+struct tick_counter_checker<uint64_t> : valid_type {};
 } //namespace detail
 
 static_assert(detail::tick_counter_checker<ATMOS_TICK_COUNTER_TYPE>::is_valid,
