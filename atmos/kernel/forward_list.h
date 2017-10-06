@@ -164,6 +164,15 @@ struct ATMOS_PACKED forward_list_tagged : private forward_list_base
 	///<param name="elem">Any element of any list. Can not be nullptr.</param>
 	///<returns>Element after "elem" element or nullptr if there is no element.</returns>
 	static list_element_type* next(list_element_type* elem) ATMOS_NONNULL(1);
+	
+	///<summary>Set next element of "elem" element to "next".</summary>
+	///<param name="elem">Target element. Can not be nullptr.</param>
+	///<param name="next">Element that will be set as next of "elem".</param>
+	static void set_next(list_element_type* elem, list_element_type* next) ATMOS_NONNULL(1);
+	
+	///<summary>Set list head to "elem".</summary>
+	///<param name="elem">Element to be set as list head.</param>
+	void set_first(list_element_type* elem);
 };
 
 template<typename ForwardListElement>
@@ -217,5 +226,17 @@ typename forward_list_tagged<ForwardListElement>::list_element_type*
 	return static_cast<list_element_type*>(elem->next);
 }
 
+template<typename ForwardListElement>
+void forward_list_tagged<ForwardListElement>::set_next(list_element_type* elem,
+	list_element_type* next)
+{
+	elem->next = next;
+}
+
+template<typename ForwardListElement>
+void forward_list_tagged<ForwardListElement>::set_first(list_element_type* elem)
+{
+	first_element = elem;
+}
 } //namespace container
 } //namespace atmos

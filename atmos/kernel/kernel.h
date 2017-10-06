@@ -11,7 +11,7 @@ class kernel final : public static_class
 {
 public:
 	///<summary>Runs ATMOS. Does not return.</summary>
-	static void ATMOS_NORETURN ATMOS_NAKED run();
+	static void ATMOS_NORETURN run();
 };
 
 } //namespace atmos

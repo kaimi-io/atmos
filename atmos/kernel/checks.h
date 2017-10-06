@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdint.h>
+
+#include "config.h"
 #include "timer_config.h"
 
 #ifdef __AVR_XMEGA__
@@ -20,3 +23,45 @@ static_assert(false, "You need to have F_CPU value defined");
 #ifdef __NO_INTERRUPTS__
 static_assert(false, "Interrupts must be enabled for ATMOS to work");
 #endif //__NO_INTERRUPTS__
+
+namespace detail
+{
+template<typename T>
+struct tick_counter_checker
+{
+	static constexpr bool is_valid = false;
+};
+
+template<>
+struct tick_counter_checker<uint8_t>
+{
+	static constexpr bool is_valid = true;
+};
+
+template<>
+struct tick_counter_checker<uint16_t>
+{
+	static constexpr bool is_valid = true;
+};
+
+template<>
+struct tick_counter_checker<__uint24>
+{
+	static constexpr bool is_valid = true;
+};
+
+template<>
+struct tick_counter_checker<uint32_t>
+{
+	static constexpr bool is_valid = true;
+};
+
+template<>
+struct tick_counter_checker<uint64_t>
+{
+	static constexpr bool is_valid = true;
+};
+} //namespace detail
+
+static_assert(detail::tick_counter_checker<ATMOS_TICK_COUNTER_TYPE>::is_valid,
+	"ATMOS_TICK_COUNTER_TYPE does not name a valid tick counter type");

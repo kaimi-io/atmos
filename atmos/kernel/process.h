@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "config.h"
 #include "defines.h"
 #include "forward_list.h"
 #include "static_class.h"
@@ -29,6 +30,10 @@ public:
 
 	///Process ID type.
 	using id_type = uint16_t;
+	
+#if ATMOS_SUPPORT_SLEEP
+	using tick_t = ATMOS_TICK_COUNTER_TYPE;
+#endif //ATMOS_SUPPORT_SLEEP
 
 public:
 	///Process control block.
@@ -36,6 +41,9 @@ public:
 	{
 		///Saved process stack pointer.
 		stack_pointer_type stack_pointer = 0;
+#if ATMOS_SUPPORT_SLEEP
+		tick_t sleep_until = 0;
+#endif //ATMOS_SUPPORT_SLEEP
 	};
 	
 public:
@@ -92,6 +100,36 @@ public:
 	{
 		return create(entry_point, memory.get_memory(), RequiredStackSize + minimal_context_size);
 	}
+	
+#if ATMOS_SUPPORT_SLEEP || ATMOS_SUPPORT_YIELD
+	///<summary>Yields execution from current process to another.</summary>
+	static void ATMOS_NOINLINE ATMOS_NAKED yield();
+#endif //ATMOS_SUPPORT_SLEEP || ATMOS_SUPPORT_YIELD
+
+#if ATMOS_SUPPORT_SLEEP
+	///<summary>Suspends execution of current process
+	///         for specified amount of scheduler ticks.</summary>
+	///<param name="ticks">Number of ticks to sleep for.</param>
+	static void sleep_ticks(tick_t ticks);
+	
+	///<summary>Suspends execution of current process
+	///         for specified amount of microseconds.</summary>
+	///<param name="ticks">Number of microseconds to sleep for.</param>
+	template<typename T>
+	static void sleep_us(T microseconds)
+	{
+		sleep_ticks(static_cast<tick_t>(microseconds / ATMOS_TICK_PERIOD_US));
+	}
+	
+	///<summary>Suspends execution of current process
+	///         for specified amount of milliseconds.</summary>
+	///<param name="ticks">Number of milliseconds to sleep for.</param>
+	template<typename T>
+	static void sleep_ms(T milliseconds)
+	{
+		sleep_ticks(static_cast<tick_t>(1000ul * milliseconds / ATMOS_TICK_PERIOD_US));
+	}
+#endif //ATMOS_SUPPORT_SLEEP
 	
 private:
 	///<summary>Creates new process with specified entry point,

@@ -14,6 +14,9 @@ template<size_t RequiredStackSize>
 class ATMOS_PACKED process_memory_block
 {
 public:
+	static constexpr size_t memory_block_size = RequiredStackSize + process::minimal_context_size;
+	
+public:
 	///Creates process memory block with required stack size.
 	///Fills memory with nullbytes.
 	constexpr process_memory_block()
@@ -28,7 +31,7 @@ public:
 	}
 	
 private:
-	uint8_t memory_[RequiredStackSize + process::minimal_context_size];
+	uint8_t memory_[memory_block_size];
 };
 
 } //namespace atmos

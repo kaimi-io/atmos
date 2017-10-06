@@ -2,8 +2,6 @@
 
 #include <stdint.h>
 
-#include <util/delay.h>
-
 #include "kernel/defines.h"
 #include "kernel/kernel.h"
 #include "kernel/kernel_lock.h"
@@ -14,9 +12,9 @@ using namespace atmos;
 
 namespace
 {
-process_memory_block<8> process1_memory;
-process_memory_block<8> process2_memory;
-process_memory_block<8> process3_memory;
+process_memory_block<16> process1_memory;
+process_memory_block<16> process2_memory;
+process_memory_block<16> process3_memory;
 
 void ATMOS_OS_TASK process1();
 void ATMOS_OS_TASK process2();
@@ -32,7 +30,7 @@ void process1()
 			process::create(process3, process3_memory);
 		}
 		
-		_delay_ms(100);
+		process::sleep_ms(100u);
 		kernel_lock lock;
 		PORTC ^= _BV(PC0);
 	}
@@ -42,7 +40,7 @@ void process2()
 {
 	while(true)
 	{
-		_delay_ms(300);
+		process::sleep_ms(300u);
 		kernel_lock lock;
 		PORTC ^= _BV(PC1);
 	}
@@ -52,7 +50,7 @@ void process3()
 {
 	while(true)
 	{
-		_delay_ms(1000);
+		process::sleep_ms(1000u);
 		kernel_lock lock;
 		PORTC ^= _BV(PC2);
 	}

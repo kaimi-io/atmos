@@ -27,6 +27,12 @@
 ///Non-null function parameters.
 #define ATMOS_NONNULL(...) __attribute__((nonnull(__VA_ARGS__)))
 
+///Not inlined functions.
+#define ATMOS_NOINLINE __attribute__((noinline))
+
+///Always inlined functions.
+#define ATMOS_ALWAYS_INLINE __attribute__((always_inline)) inline
+
 //Call and jump assembler device-specific instructions.
 #ifdef __AVR_HAVE_JMP_CALL__
 #	define ATMOS_CALL "call "
